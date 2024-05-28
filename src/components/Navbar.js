@@ -14,7 +14,7 @@ const Navbar = () => {
         <h1>Button</h1>
       </div>
       <div className="bg-green-500 w-[25%] flex justify-center items-center">
-        <h1>test test</h1>
+    
         <h1>Button</h1>
       </div>
     </div>
