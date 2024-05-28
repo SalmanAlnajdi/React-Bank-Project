@@ -18,11 +18,11 @@ const Login = () => {
 
      
       <section className="relative flex flex-wrap lg:h-screen lg:items-center p-8">
-<div className="relative h-64 w-full sm:h-96 lg:h-full lg:w-1/2 ">
+<div className="relative h-auto  w-full sm:h-auto  lg:h-full lg:w-1/2 flex justify-center items-center ">
     <img
       alt=""
       src="https://bournemouth.foodbank.org.uk/wp-content/uploads/sites/64/2023/03/Credit-card-bro-768x768.png"
-      className="absolute inset-0 h-full w-full object-fill"
+      className=" h-full w-full object-fill"
     />
   </div>
   
