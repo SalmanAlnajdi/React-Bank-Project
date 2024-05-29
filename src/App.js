@@ -1,21 +1,28 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { useEffect, useState } from "react";
+import UserContext from "./context/UserContext";
 
 function App() {
-  return (
-    <div className="App">
-      <Routes>
+  const [user, setUser] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setUser(true);
+    }
+  }, []);
 
-        {/* <Route path="/" Component={Home} /> */}
-        <Route path="/" Component={Login} />
-        <Route path="/register" Component={Register} />
-      </Routes>
-      
-    </div>
+  return (
+    <UserContext.Provider value={[user, setUser]}>
+      <div className="App">
+        <Routes>
+          {/* <Route path="/home" Component={Home} /> */}
+          <Route path="/" Component={Login} />
+          <Route path="/register" Component={Register} />
+        </Routes>
+      </div>
+    </UserContext.Provider>
   );
 }
 
