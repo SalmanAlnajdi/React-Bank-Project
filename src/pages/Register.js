@@ -1,7 +1,30 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
+import { Link } from 'react-router-dom'
+import UserContext from '../context/UserContext'
+import { useMutation } from '@tanstack/react-query'
+import { register } from '../api/auth'
 
 const Register = () => {
+  const [userInfo, setUserInfo] = useState({})
+  const [user, setUser] = useContext(UserContext)
+
+  const { mutate } = useMutation({
+  mutationKey: ['register'],
+  mutationFn: () => register(userInfo),
+})
+  const handleChange = (e) => {
+    if (e.target.name === "image") {
+      setUserInfo({ ...userInfo, [e.target.name]: e.target.files[0] });
+    } else {
+      setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
+    }
+  };
  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutate();
+  }
+  
   return (
     <div className='w-full h-[100vh]  flex-col justify-center items-center'>
       <div className='w-full h-[90px]  flex justify-start items-center p-5'>
@@ -33,7 +56,7 @@ const Register = () => {
 
       <p className="text-sm text-black">
           If you already have an account,
-          <a className="underline" href="#">Sign in</a>
+          <Link to="/" className="underline"> Sign in</Link>
         </p>
     </div>
 
@@ -43,6 +66,9 @@ const Register = () => {
 
         <div className="relative">
           <input
+          onChange={handleChange}
+            name="username"
+            id="username"
             type="username"
             className="w-full rounded-lg border-gray-700 p-4 pe-12 text-sm shadow-sm"
             placeholder="Enter username"
@@ -73,6 +99,9 @@ const Register = () => {
 
         <div className="relative">
           <input
+          onChange={handleChange}
+            name="password"
+            id="password"
             type="password"
             className="w-full rounded-lg border-gray-700 p-4 pe-12 text-sm shadow-sm"
             placeholder="Enter password"
@@ -114,8 +143,8 @@ const Register = () => {
             type="file"
             id="image"
             name="image"
-            onChange={""}
-            className="w-full px-4 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
             required
           />
         </div>
@@ -125,6 +154,7 @@ const Register = () => {
 
         <button
           type="submit"
+          onClick={handleSubmit}
           className="w-full inline-block rounded-lg bg-green-700 px-5 py-3 text-lg font-medium text-white"
         >
          Register

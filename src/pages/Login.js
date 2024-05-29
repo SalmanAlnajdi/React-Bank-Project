@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import Register from './Register'
 
 const Login = () => {
   return (
@@ -32,7 +34,7 @@ const Login = () => {
 
       <p className="text-sm text-black">
           If you do not have an account,
-          <a className="underline" href="#">Sign up</a>
+          <Link to="/register" className="underline">Sign Up</Link>
         </p>
     </div>
 
