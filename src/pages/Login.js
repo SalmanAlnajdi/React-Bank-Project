@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../api/auth";
@@ -7,12 +7,14 @@ import { login } from "../api/auth";
 const Login = () => {
   const [user, setUser] = useContext(UserContext);
   const [userInfo, setUserInfo] = useState({});
+  const  navigate = useNavigate();
 
   const { mutate } = useMutation({
     mutationKey: ["login"],
     mutationFn: () => login(userInfo),
     onSuccess: () => {
       setUser(true);
+      navigate("/home");
     },
   });
 
