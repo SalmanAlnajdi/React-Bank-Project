@@ -12,9 +12,9 @@ const Navbar = () => {
           className=" h-full  object-cover"
         />
 
-        <h1 className="text-green-700 text-lg font-bold sm:text-3xl">
+        <p className="text-green-700 text-md font-bold sm:text-sm">
           Full Stack Bank
-        </h1>
+        </p>
       </div>
 
       </div>

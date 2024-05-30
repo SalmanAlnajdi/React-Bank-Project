@@ -53,7 +53,7 @@ const Home = () => {
       setErrorMessage('Insufficient balance for withdrawal.');
       return;
     }
-    
+
     setErrorMessage('');
 
     if(isChecked){
@@ -67,8 +67,8 @@ const Home = () => {
   return (
     <div className=' w-full h-[100vh] flex flex-col j items-center font-bold'>
       <Navbar />
-      <div className=' w-[50%] h-[70vh] flex flex-col justify-start items-center gap-20 p-4'>
-        <div className=' w-[50%] h-[180px] rounded-3xl flex flex-col justify-center items-center text-center gap-6 shadow-lg shadow-slate-500'>
+      <div className=' w-[100%] h-[70vh]  flex flex-col justify-start items-center gap-20 p-4'>
+        <div className=' w-[75%] h-[180px] lg:w-[400px] rounded-3xl p-4 wrap flex flex-col justify-center items-center text-center gap-6 shadow-lg shadow-slate-500 '>
         <p className='text-xl'>
            your available Balance :
         </p>
@@ -83,7 +83,7 @@ const Home = () => {
 
         </div>
         </div>
-        <div className=' w-[50%] h-[240px] rounded-3xl flex flex-col justify-center items-center text-center gap-5 shadow-lg shadow-slate-500'>
+        <div className=' w-[75%] h-[240px] lg:w-[400px] rounded-3xl wrap flex flex-col justify-center items-center text-center gap-5 shadow-lg shadow-slate-500'>
          
           <div className='flex justify-center items-center gap-2'>
             <p>Deposit </p>
