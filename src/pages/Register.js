@@ -10,14 +10,6 @@ const Register = () => {
   const [user, setUser] = useContext(UserContext);
   const navigate = useNavigate();
 
-  // const getUsers = () => {
-  //   // Sending HTTP GET request
-  //   getAllUsers.then((response) => {
-  //     const usersNames = response.data.map((res) => res.name);
-  //     setUserList(usersNames);
-  //   });
-  // };
-
   const { mutate } = useMutation({
     mutationKey: ["register"],
     mutationFn: () => register(userInfo),
@@ -37,12 +29,6 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // if (userList.includes(e.name.trim())) {
-    //   alert(`${e.name} is already taken, Please select any other name.`);
-    //   return;
-    // } else {
-    //   mutate();
-    // }
     mutate();
   };
 

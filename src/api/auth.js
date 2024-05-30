@@ -38,4 +38,9 @@ const me = async () => {
   return data;
 };
 
-export { register, login, getAllUsers, me };
+const updateUser = async (image) => {
+    const { data } = await instance.put("//mini-project/api/auth/profile", { image });
+    return data;
+};
+
+export { register, login, getAllUsers, me , updateUser };
