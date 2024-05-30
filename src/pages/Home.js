@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import { me } from "../api/auth";
 import {
-  QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
@@ -10,7 +9,6 @@ import {
 import { deposit, withdraw } from "../api/Transaction";
 
 const Home = () => {
-  const [balance, setBalance] = useState(0);
   const [amount, setAmount] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");

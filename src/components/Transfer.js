@@ -21,11 +21,16 @@ const Transfer = ({ show, onOpen, onClose, username }) => {
     onSuccess: () => {
      onClose();
      setAmount()
-      queryClient.invalidateQueries(["getAllusers"]);
+      queryClient.invalidateQueries(["getAllUsers"]);
     },
     onError: (error) => {
-      console.error("Transfer failed:", error);
+      if (error.response && error.response.data) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("Transfer failed due to an unexpected error.");
+      }
     },
+    
   })
 
 
