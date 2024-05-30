@@ -1,7 +1,13 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+ const navigate = useNavigate();
+
+const logout = () => {
+  localStorage.clear();
+  navigate("/");
+}
   return (
     <div className="  w-[100%] h-[70px] flex">
       <div className=" w-[25%] flex justify-start items-center p-[25px]">
@@ -23,14 +29,14 @@ const Navbar = () => {
 
 
     
-      <div className="bg-blue-500 w-[50%] flex  justify-center items-center gap-14">
-        <NavLink to="/home">Home</NavLink>
+      <div className=" w-[50%] flex  justify-center items-center gap-14">
+        <NavLink to="/home" className={({ isActive }) => isActive ? 'active' : ''}>Home</NavLink>
         <NavLink to='/transactions'>Transactions</NavLink>
         <NavLink to='/allprofiles'>Users</NavLink>
         <NavLink to='/profile'>Profile</NavLink>
       </div>
-      <div className="bg-green-500 w-[25%] flex justify-end items-center p-[25px]">
-         <button>
+      <div className=" w-[25%] flex justify-end items-center p-[25px]">
+         <button onClick={logout} className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-md font-bold sm:text-sm">
           Logout
          </button>
       </div>
