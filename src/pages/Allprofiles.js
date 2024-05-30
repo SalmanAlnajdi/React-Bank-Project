@@ -10,7 +10,7 @@ const Allprofiles = () => {
   const onOpen = () => setShow(true);
   const { data: users } = useQuery({
     queryKey: "allprofiles",
-    queryFn: async () => getAllUsers(),
+    queryFn: () => getAllUsers(),
   });
 
   return (
@@ -40,7 +40,6 @@ const Allprofiles = () => {
               show={show}
               onClose={onClose}
               onOpen={() => {}}
-              userbalance={user?.balance}
               username={user?.username}
             />
           </div>
