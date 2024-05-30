@@ -20,9 +20,9 @@ const withdraw = async (amount) => {
 
 const transfer = async (amount, username) => {
   const { data } = await instance.put(
-    "/mini-project/api/transactions/transfer/<username>",
+    `/mini-project/api/transactions/transfer/${username}`,
     { amount, username }
   );
   return data;
 };
-export { deposit, withdraw };
+export { deposit, withdraw , transfer };

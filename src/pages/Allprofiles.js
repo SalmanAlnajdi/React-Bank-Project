@@ -8,6 +8,7 @@ const Allprofiles = () => {
   const [show, setShow] = useState(false);
   const onClose = () => setShow(false);
   const onOpen = () => setShow(true);
+  const [userData, setUserData] = useState();
   const { data: users } = useQuery({
     queryKey: "allprofiles",
     queryFn: () => getAllUsers(),
@@ -31,20 +32,23 @@ const Allprofiles = () => {
             <p className="text-lg font-semibold">balance : {user.balance}</p>
 
             <button
-              onClick={onOpen}
+              onClick={() => {
+                onOpen();
+                setUserData(user);
+              }}
               className=" hover:bg-green-700  hover:text-white font-bold py-2 px-4 rounded text-md font-bold sm:text-sm"
             >
               Transfer
             </button>
-            <Transfer
-              show={show}
-              onClose={onClose}
-              onOpen={() => {}}
-              username={user?.username}
-            />
           </div>
         ))}
       </div>
+        <Transfer
+          show={show}
+          onClose={onClose}
+          onOpen={() => {}}
+          username={userData?.username}
+        />
 
       <div className="bg-blue-500  w-full h-[100px] flex flex-col justify-center items-center gap-4">
         footer
