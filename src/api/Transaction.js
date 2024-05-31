@@ -25,4 +25,10 @@ const transfer = async (amount, username) => {
   );
   return data;
 };
-export { deposit, withdraw , transfer };
+
+const getTransactions = async () => {
+  const { data } = await instance.get("/mini-project/api/transactions/my");
+  return data;
+};
+
+export { deposit, withdraw , transfer , getTransactions };
