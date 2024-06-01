@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
 
 const Navbar = () => {
  const navigate = useNavigate();
+ const [user, setUser] = useContext(UserContext);
 
 const logout = () => {
   localStorage.clear();
+  setUser(null);
   navigate("/");
 }
   return (
     <div className="  w-[100%] h-[70px] flex">
+
       <div className=" w-[25%] flex justify-start items-center p-[25px]">
       <div className="w-full h-[90px]  flex justify-start items-center p-5">
         <img

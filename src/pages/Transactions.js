@@ -1,56 +1,205 @@
-import React from 'react'
+
 import Navbar from '../components/Navbar'
 import { useQuery } from '@tanstack/react-query'
 import { getTransactions } from '../api/Transaction'
-// import { FaArrowUp, FaArrowDown, FaExchangeAlt } from 'react-icons/fa'; 
-import { FaArrowDown, FaArrowUp, FaExchangeAlt } from 'react-icons/fa';
+import TransactionCard from '../components/TransactionCard'
+import { useEffect, useState } from 'react'
+
+
 
 const Transactions = () => {
+  const [radio, setRadio] = useState('all')
+  const [fromDate, setFromDate] = useState()
+  const [toDate, setToDate] = useState()
+  const [filteredData , setFilteredData] = useState([])
+  const [isChecked,setIsChecked] = useState(false)
+  const typeOptions = ['all', 'deposit', 'withdraw', 'transfer']
+  
 
  const {data} = useQuery({
   queryKey: 'transactions',
   queryFn: () => getTransactions(),
+  
 })
 
-const getTransactionStyle = (type) => {
-  switch (type) {
-    case 'deposit':
-      return { icon: <FaArrowDown className="text-green-500" />, color: 'bg-green-100' };
-    case 'withdraw':
-      return { icon: <FaArrowUp className="text-red-500" />, color: 'bg-red-100' };
-    case 'transfer':
-      return { icon: <FaExchangeAlt className="text-red-500" />, color: 'bg-red-100' };
-    default:
-      return { icon: null, color: 'bg-gray-100' };
+useEffect(() => {
+  if (data) {
+    setFilteredData(data);
+  }
+}, [data]);
+
+const onChangeHandler = (e) => {
+  setRadio(e.target.value);
+};
+const dateHandler = (e) => {
+  if (e.target.name === 'fromDate') {
+    setFromDate(e.target.value);
+  }
+  if (e.target.name === 'toDate') {
+    setToDate(e.target.value);
   }
 };
 
+const onCheckHandler = (e) => {
+  if(e.target.checked){
+    setIsChecked(true)
+  }else{
+    setIsChecked(false)
+  }
+};
+
+
+const filterByDateRange = (transaction) => {
+  const from = fromDate ? new Date(fromDate) : null
+  const to = toDate ? new Date(toDate) : null
+
+  // Include the full day for the "toDate" by setting it to the end of the day
+  if (to) {
+    to.setHours(23, 59, 59, 999);
+  }
+  if(from){
+    from.setHours(0, 0, 0, 0);
+  }
+
+  const transactionDate = new Date(transaction.createdAt)
+
+  return (
+    (!from || transactionDate >= from) &&
+    (!to || transactionDate <= to)
+  )
+}
+
+const applyFilters = () => {
+  const newData = data?.filter((transaction) => {
+   if(isChecked){
+      return filterByDateRange(transaction)
+    }else{
+      return true
+    }
+  }).filter((transaction)=>{
+    if(typeOptions.includes(radio)){
+        return radio === 'all' || transaction.type === radio
+    }
+  })
+
+  setFilteredData(newData)
+}
+
+
+ const transactionList = filteredData?.map((transaction) => <TransactionCard transaction={transaction} key={transaction.id} />);
   return (
     <div className=" w-full h-[100vh] flex flex-col items-center font-bold">
     <Navbar />
     <div className=" w-[100%] h-auto  wrap  flex flex-col justify-start items-center gap-12 p-4">
-    {data?.map((transaction) => {
-          const { icon, color } = getTransactionStyle(transaction.type);
-          return (
-            <div
-              key={transaction.id}
-              className={`w-[90%] h-[80%] lg:w-[80%] lg:h-[100px] rounded-3xl p-4 wrap flex justify-center items-center text-center gap-6 shadow-lg shadow-slate-200 ${color}`}
-            >
-              <div className="h-[100%] w-[10%] flex justify-center items-center">
-                {icon}
-              </div>
-              <div className="h-[100%] w-[30%] flex justify-start items-center p-[25px]">
-                <p className="text-xl">{transaction.amount}</p>
-              </div>
-              <div className="h-[100%] w-[30%] flex justify-start items-center p-[25px]">
-                <p className="text-xl">{new Date(transaction.createdAt).toLocaleDateString()}</p>
-              </div>
-              <div className="h-[100%] w-[30%] flex justify-start items-center p-[25px]">
-                <p className="text-xl capitalize">{transaction.type}</p>
-              </div>
-            </div>
-          );
-        })}
+   
+ <div className="flex justify-center gap-4">
+ <label
+              className="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+              htmlFor="Filter"
+          >
+              Filter: 
+          </label>
+      <div className="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
+          <input
+              className="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 appearance-none rounded-full border-2 border-solid border-neutral-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-success-700 checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-success-700 checked:after:bg-success-700 checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:border-success-700 checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:border-neutral-600 dark:checked:border-success-700 dark:checked:after:border-success-700 dark:checked:after:bg-success-700 dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:border-success-700 dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
+              type="radio"
+              name="radio-filter"
+              id="all"
+              value="all"
+              onChange={onChangeHandler}
+              checked={radio === 'all'}
+          />
+          <label
+              className="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+              htmlFor="all"
+          >
+              All
+          </label>
+          </div>
+          {
+          // First radio
+          }
+          <div className="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
+          <input
+              className="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 appearance-none rounded-full border-2 border-solid border-neutral-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-success-700 checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-success-700 checked:after:bg-success-700 checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:border-success-700 checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:border-neutral-600 dark:checked:border-success-700 dark:checked:after:border-success-700 dark:checked:after:bg-success-700 dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:border-success-700 dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
+              type="radio"
+              name="radio-filter"
+              id="deposit"
+              value="deposit"
+              onChange={ onChangeHandler}
+          />
+          <label
+              className="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+              htmlFor="deposit"
+          >
+              Diposit
+          </label>
+          </div>
+          {
+          // Second radio
+          }
+          <div className="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
+          <input
+              className="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 appearance-none rounded-full border-2 border-solid border-neutral-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-success-700 checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-success-700 checked:after:bg-success-700 checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:border-success-700 checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:border-neutral-600 dark:checked:border-success-700 dark:checked:after:border-success-700 dark:checked:after:bg-success-700 dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:border-success-700 dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
+              type="radio"
+              name="radio-filter"
+              id="withdraw"
+              value="withdraw"
+              onChange={ onChangeHandler}
+          />
+          <label
+              className="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+              htmlFor="withdraw"
+          >
+              Withdraw
+          </label>
+          </div>
+         
+          <div className="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
+          <input
+              className="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 appearance-none rounded-full border-2 border-solid border-neutral-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-success-700 checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-success-700 checked:after:bg-success-700 checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:border-success-700 checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:border-neutral-600 dark:checked:border-success-700 dark:checked:after:border-success-700 dark:checked:after:bg-success-700 dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:border-success-700 dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
+              type="radio"
+              name="radio-filter"
+              id="transfer"
+              value="transfer"
+              onChange={ onChangeHandler}
+          />
+          <label
+              className="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+              htmlFor="transfer"
+          >
+              Transfer
+          </label>
+          </div>
+
+          <div className="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]">
+        <input
+          className="relative float-left -ml-[1.5rem] mr-[6px] mt-[0.15rem] h-[1.125rem] w-[1.125rem] appearance-none rounded-[0.25rem] border-[0.125rem] border-solid border-neutral-300 outline-none before:pointer-events-none before:absolute before:h-[0.875rem] before:w-[0.875rem] before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] checked:border-primary checked:bg-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:-mt-px checked:after:ml-[0.25rem] checked:after:block checked:after:h-[0.8125rem] checked:after:w-[0.375rem] checked:after:rotate-45 checked:after:border-[0.125rem] checked:after:border-l-0 checked:after:border-t-0 checked:after:border-solid checked:after:border-white checked:after:bg-transparent checked:after:content-[''] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:transition-[border-color_0.2s] focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-[0.875rem] focus:after:w-[0.875rem] focus:after:rounded-[0.125rem] focus:after:content-[''] checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:after:-mt-px checked:focus:after:ml-[0.25rem] checked:focus:after:h-[0.8125rem] checked:focus:after:w-[0.375rem] checked:focus:after:rotate-45 checked:focus:after:rounded-none checked:focus:after:border-[0.125rem] checked:focus:after:border-l-0 checked:focus:after:border-t-0 checked:focus:after:border-solid checked:focus:after:border-white checked:focus:after:bg-transparent dark:border-neutral-600 dark:checked:border-primary dark:checked:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
+          type="checkbox"
+          name='byDate'
+          id="byDate"
+          onChange={ onCheckHandler}
+          />
+        <label
+          className="inline-block pl-[0.15rem] hover:cursor-pointer"
+          htmlFor="checkboxDefault">
+          By Date
+        </label>
+      </div>
+      </div>
+      <div className="w-full h-[100px] flex justify-center items-center gap-4">
+      <label className="text-lg">From</label>
+      <input aria-label="Date and time" type="date" name='fromDate' id='fromDate' onChange={dateHandler}/>
+      <label className="text-lg">To</label>
+      <input aria-label="Date and time" type="date" name='toDate' id='toDate' onChange={dateHandler}  />
+      </div>
+    <div className="w-full h-[100px] flex flex-col justify-center items-center gap-4">
+     <button className="bg-blue-500 w-full h-[100px] flex justify-center items-center" onClick={applyFilters} >Filter</button>
+      <h1 className="text-3xl  font-semibold">Transactions</h1>
+     
+      </div>
+      {transactionList.reverse()}
+
     </div>
     <div className="bg-blue-500  w-full h-[100px] flex flex-col justify-center items-center gap-4">
       footer
