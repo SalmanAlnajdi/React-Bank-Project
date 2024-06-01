@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getTransactions } from '../api/Transaction'
 import TransactionCard from '../components/TransactionCard'
 import { useEffect, useState } from 'react'
+import { TERipple } from 'tw-elements-react'
 
 
 
@@ -11,6 +12,7 @@ const Transactions = () => {
   const [radio, setRadio] = useState('all')
   const [fromDate, setFromDate] = useState()
   const [toDate, setToDate] = useState()
+  const [amount ,setAmount] =useState()
   const [filteredData , setFilteredData] = useState([])
   const [isChecked,setIsChecked] = useState(false)
   const typeOptions = ['all', 'deposit', 'withdraw', 'transfer']
@@ -30,6 +32,11 @@ useEffect(() => {
 
 const onChangeHandler = (e) => {
   setRadio(e.target.value);
+
+};
+
+const amountHandler = (e) => {
+  setAmount(e.target.value);
 };
 const dateHandler = (e) => {
   if (e.target.name === 'fromDate') {
@@ -70,7 +77,13 @@ const filterByDateRange = (transaction) => {
 }
 
 const applyFilters = () => {
-  const newData = data?.filter((transaction) => {
+  const newData = data?.filter((transaction)=>{
+    if(amount){
+      return transaction.amount == amount
+    }else{
+      return true
+    }
+  }).filter((transaction) => {
    if(isChecked){
       return filterByDateRange(transaction)
     }else{
@@ -91,7 +104,27 @@ const applyFilters = () => {
     <div className=" w-full h-[100vh] flex flex-col items-center font-bold">
     <Navbar />
     <div className=" w-[100%] h-auto  wrap  flex flex-col justify-start items-center gap-12 p-4">
-   
+    <div className=" w-[80%] flex flex-wrap justify-between items-center gap-4">
+                    <input
+                        type="number"
+                        className=" m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-lg text-center border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-success-700 focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-success-700"
+                        placeholder="Search"
+                        aria-label="Search"
+                        onChange={amountHandler}
+                        aria-describedby="button-addon3" />
+
+                    {/* <!--Search button--> */}
+                  
+                    <button
+                        className=" z-[2] rounded-lg border-2 border- px-6 py-2 text-xs font-medium uppercase text-black transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0"
+                        type="button"
+                        id="button-addon3"
+                        onClick={applyFilters}
+                        >
+                        Search
+                    </button>
+                  
+                </div>
  <div className="flex justify-center gap-4">
  <label
               className="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
@@ -193,11 +226,7 @@ const applyFilters = () => {
       <label className="text-lg">To</label>
       <input aria-label="Date and time" type="date" name='toDate' id='toDate' onChange={dateHandler}  />
       </div>
-    <div className="w-full h-[100px] flex flex-col justify-center items-center gap-4">
-     <button className="bg-blue-500 w-full h-[100px] flex justify-center items-center" onClick={applyFilters} >Filter</button>
-      <h1 className="text-3xl  font-semibold">Transactions</h1>
-     
-      </div>
+    
       {transactionList.reverse()}
 
     </div>
