@@ -1,22 +1,31 @@
-
 import Navbar from "../components/Navbar";
-import { useQuery } from "@tanstack/react-query";
-import { me } from "../api/auth";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { me, updateProfile } from "../api/auth";
+import { useState } from "react";
 
 const Profile = () => {
+  const [image, setImage] = useState();
+  const queryClient = useQueryClient();
+
   const { data: user } = useQuery({
-    queryKey: "profile",
+    queryKey: ["profile"],
     queryFn: async () => me(),
     onSuccess: (data) => {
       console.log(data);
     },
   });
 
-  // const [image, setImage] = useState();
+  const { mutate } = useMutation({
+    mutationKey: ["updateProfile"],
+    mutationFn: async () => updateProfile(image),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["profile"]);
+    },
+  });
 
-  // const handleChange = (e) => {
-  //   console.log(e.target.files[0]);
-  // };
+  const handleChange = (e) => {
+    setImage(e.target.files[0]);
+  };
 
   return (
     <div className=" w-full h-[100vh] flex flex-col j items-center font-bold">
@@ -42,14 +51,14 @@ const Profile = () => {
               type="file"
               id="image"
               name="image"
-              // onChange={handleChange}
+              onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
               required
             />
           </div>
 
           <button
-            onClick={""}
+            onClick={mutate}
             className=" hover:bg-green-700  hover:text-white font-bold py-2 px-4 rounded text-md font-bold sm:text-sm"
           >
             save

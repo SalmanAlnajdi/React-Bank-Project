@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import { useMutation } from "@tanstack/react-query";
-import {  register } from "../api/auth";
+import { register } from "../api/auth";
 
 const Register = () => {
   // const [userList, setUserList] = useState([]);
@@ -28,7 +28,7 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     mutate();
   };
 
@@ -47,16 +47,16 @@ const Register = () => {
         </h1>
       </div>
 
-      <section className="relative flex flex-wrap lg:h-screen lg:items-center p-8">
-        <div className=" h-full w-full sm:h-96 lg:h-full lg:w-1/2 ">
+      <div className="relative flex flex-wrap lg:h-screen lg:items-center p-8">
+        <div className="relative h-[100vh]  w-[50%] sm:h-auto  lg:h-full lg:w-1/2 flex justify-center items-center">
           <img
             alt=""
             src="https://bournemouth.foodbank.org.uk/wp-content/uploads/sites/64/2023/03/Credit-card-bro-768x768.png"
-            className="h-full w-full object-fill"
+            className=" h-[80%] w-[80%] md:w-[50%]  md-[50%] object-fill"
           />
         </div>
 
-        <div className="text-green-700 w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
+        <div className="text-green-700 w-[50%] px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-lg text-center">
             <h1 className="text-2xl font-bold sm:text-3xl">
               Register your account
@@ -180,7 +180,7 @@ const Register = () => {
             </div>
           </form>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

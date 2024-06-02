@@ -7,7 +7,7 @@ import { login } from "../api/auth";
 const Login = () => {
   const [user, setUser] = useContext(UserContext);
   const [userInfo, setUserInfo] = useState({});
-  const  navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { mutate } = useMutation({
     mutationKey: ["login"],
@@ -29,7 +29,7 @@ const Login = () => {
 
   return (
     <div className="w-full h-[100vh]  flex-col justify-center items-center">
-      <div className="w-full h-[90px]  flex justify-start items-center p-5">
+      <div className="w-full h-[90px]  flex  justify-start items-center p-5">
         <img
           alt=""
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFvoCzaRO2NbZPaVvr9IY2Zltp6evQIt1X0clcmPW27PDVIlhlstUgjcJd2E6qL-EhVww&usqp=CAU"
@@ -41,16 +41,16 @@ const Login = () => {
         </h1>
       </div>
 
-      <section className="relative flex flex-wrap lg:h-screen lg:items-center p-8">
-        <div className="relative h-auto  w-full sm:h-auto  lg:h-full lg:w-1/2 flex justify-center items-center ">
+      <div className="relative flex flex-wrap lg:h-screen lg:items-center p-8">
+        <div className="relative h-[100vh]  w-[50%] sm:h-auto  lg:h-full lg:w-1/2 flex justify-center items-center ">
           <img
             alt=""
             src="https://bournemouth.foodbank.org.uk/wp-content/uploads/sites/64/2023/03/Credit-card-bro-768x768.png"
-            className=" h-full w-full object-fill"
+            className=" h-[80%] w-[80%] md:w-[50%]  md-[50%] object-fill"
           />
         </div>
 
-        <div className="text-green-700 w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
+        <div className="text-green-700 w-[50%] px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-lg text-center">
             <h1 className="text-2xl font-bold sm:text-3xl">
               Login to your account
@@ -154,7 +154,7 @@ const Login = () => {
             </div>
           </form>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
