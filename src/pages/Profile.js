@@ -2,12 +2,13 @@ import Navbar from "../components/Navbar";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { me, updateProfile } from "../api/auth";
 import { useState } from "react";
+import ProfileLoader from "../components/ProfileLoader";
 
 const Profile = () => {
   const [image, setImage] = useState();
   const queryClient = useQueryClient();
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => me(),
     onSuccess: (data) => {
@@ -26,6 +27,19 @@ const Profile = () => {
   const handleChange = (e) => {
     setImage(e.target.files[0]);
   };
+
+  if (isLoading) {
+    return (
+      <div className=" w-full h-[100vh] flex flex-col j items-center font-bold">
+        <Navbar />
+        <div className=" w-[100%] h-[80vh]  flex justify-center items-center gap-12 p-4">
+          <div className=" w-[90%] h-[80%] lg:w-[400px] lg:h-[480px]  rounded-3xl p-4 wrap flex flex-col justify-center items-center text-center gap-6 shadow-lg shadow-slate-500 ">
+            <ProfileLoader />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className=" w-full h-[100vh] flex flex-col j items-center font-bold">

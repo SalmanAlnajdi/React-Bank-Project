@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getTransactions } from "../api/Transaction";
 import TransactionCard from "../components/TransactionCard";
 import { useEffect, useState } from "react";
+import TransactionLoader from "../components/TransactionLoader";
 
 const Transactions = () => {
   const [radio, setRadio] = useState("all");
@@ -13,7 +14,7 @@ const Transactions = () => {
   const [isChecked, setIsChecked] = useState(false);
   const typeOptions = ["all", "deposit", "withdraw", "transfer"];
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["transactions"],
     queryFn: () => getTransactions(),
   });
@@ -93,6 +94,23 @@ const Transactions = () => {
   const transactionList = filteredData?.map((transaction) => (
     <TransactionCard transaction={transaction} key={transaction.id} />
   ));
+
+  if (isLoading) {
+    return (
+      <div>
+        <Navbar />
+        <div className=" w-[100%] h-auto  wrap  flex flex-col justify-start items-center gap-12 p-4">
+          <div className=" w-[80%] flex flex-wrap justify-between items-center gap-4">
+            <div className="flex flex-col justify-center items-center">
+              <TransactionLoader />
+              <TransactionLoader />
+              <TransactionLoader />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className=" w-full h-[100vh] flex flex-col items-center font-bold">
       <Navbar />

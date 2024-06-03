@@ -1,58 +1,67 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import UserContext from "../context/UserContext";
 import { useMutation } from "@tanstack/react-query";
 import { register } from "../api/auth";
 
 const Register = () => {
-  // const [userList, setUserList] = useState([]);
-  const [userInfo, setUserInfo] = useState({});
   const [user, setUser] = useContext(UserContext);
   const navigate = useNavigate();
 
   const { mutate } = useMutation({
     mutationKey: ["register"],
-    mutationFn: () => register(userInfo),
+    mutationFn: register,
     onSuccess: () => {
       setUser(true);
       navigate("/");
     },
   });
-  const handleChange = (e) => {
-    if (e.target.name === "image") {
-      setUserInfo({ ...userInfo, [e.target.name]: e.target.files[0] });
-    } else {
-      setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
-    }
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+      image: null,
+    },
+    validationSchema: Yup.object({
+      username: Yup.string()
+        .max(15, "Must be 15 characters or less")
+        .required("Required"),
+      password: Yup.string()
+        .min(8, "Must be 8 characters or more")
+        .required("Required"),
+      image: Yup.mixed().required("Required"),
+    }),
+    onSubmit: (values) => {
+      mutate(values);
+    },
+  });
 
-    mutate();
+  const handleFileChange = (e) => {
+    formik.setFieldValue("image", e.currentTarget.files[0]);
   };
 
   return (
-    <div className="w-full h-[100vh]  flex-col justify-center items-center">
-      <div className="w-full h-[90px]  flex justify-start items-center p-5">
-        {/* https://cdn.imgbin.com/10/5/9/imgbin-computer-programming-computer-icons-programmer-software-development-computer-code-XtAFGvEJMikFXtGQsknWiXj7F.jpg */}
+    <div className="w-full h-[100vh] flex-col justify-center items-center">
+      <div className="w-full h-[90px] flex justify-start items-center p-5">
         <img
           alt=""
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFvoCzaRO2NbZPaVvr9IY2Zltp6evQIt1X0clcmPW27PDVIlhlstUgjcJd2E6qL-EhVww&usqp=CAU"
-          className=" h-full  object-cover"
+          className="h-full object-cover"
         />
-
         <h1 className="text-green-700 text-2xl font-bold sm:text-3xl">
           Full Stack Bank
         </h1>
       </div>
 
       <div className="relative flex flex-wrap lg:h-screen lg:items-center p-8">
-        <div className="relative h-[100vh]  w-[50%] sm:h-auto  lg:h-full lg:w-1/2 flex justify-center items-center">
+        <div className="relative h-[100vh] w-[50%] sm:h-auto lg:h-full lg:w-1/2 flex justify-center items-center">
           <img
             alt=""
             src="https://bournemouth.foodbank.org.uk/wp-content/uploads/sites/64/2023/03/Credit-card-bro-768x768.png"
-            className=" h-[80%] w-[80%] md:w-[50%]  md-[50%] object-fill"
+            className="h-[80%] w-[80%] md:w-[50%] object-fill"
           />
         </div>
 
@@ -61,7 +70,6 @@ const Register = () => {
             <h1 className="text-2xl font-bold sm:text-3xl">
               Register your account
             </h1>
-
             <p className="text-sm text-black">
               If you already have an account,
               <Link to="/" className="underline">
@@ -71,7 +79,7 @@ const Register = () => {
             </p>
           </div>
 
-          <form action="#" className="p-8 w-full  space-y-4">
+          <form onSubmit={formik.handleSubmit} className="p-8 w-full space-y-4">
             <div>
               <label
                 htmlFor="username"
@@ -79,17 +87,22 @@ const Register = () => {
               >
                 Username
               </label>
-
               <div className="relative">
                 <input
-                  onChange={handleChange}
-                  name="username"
                   id="username"
-                  type="username"
+                  name="username"
+                  type="text"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.username}
                   className="w-full rounded-lg border-gray-700 p-4 pe-12 text-sm shadow-sm"
                   placeholder="Enter username"
                 />
-
+                {formik.touched.username && formik.errors.username ? (
+                  <div className="text-red-600 text-sm">
+                    {formik.errors.username}
+                  </div>
+                ) : null}
                 <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -116,17 +129,22 @@ const Register = () => {
               >
                 Password
               </label>
-
               <div className="relative">
                 <input
-                  onChange={handleChange}
-                  name="password"
                   id="password"
+                  name="password"
                   type="password"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.password}
                   className="w-full rounded-lg border-gray-700 p-4 pe-12 text-sm shadow-sm"
                   placeholder="Enter password"
                 />
-
+                {formik.touched.password && formik.errors.password ? (
+                  <div className="text-red-600 text-sm">
+                    {formik.errors.password}
+                  </div>
+                ) : null}
                 <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -157,22 +175,25 @@ const Register = () => {
                 htmlFor="image"
                 className="block text-black text-sm font-medium mb-2"
               >
-                UpLoad a Profile Image
+                Upload a Profile Image
               </label>
               <input
                 type="file"
                 id="image"
                 name="image"
-                onChange={handleChange}
+                onChange={handleFileChange}
                 className="w-full px-4 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
-                required
               />
+              {formik.touched.image && formik.errors.image ? (
+                <div className="text-red-600 text-sm">
+                  {formik.errors.image}
+                </div>
+              ) : null}
             </div>
 
             <div className="w-full">
               <button
                 type="submit"
-                onClick={handleSubmit}
                 className="w-full inline-block rounded-lg bg-green-700 px-5 py-3 text-lg font-medium text-white"
               >
                 Register
