@@ -42,16 +42,16 @@ const Login = () => {
         </h1>
       </div>
 
-      <div className="relative flex flex-wrap lg:h-screen lg:items-center p-8">
-        <div className="relative h-[100vh] w-[50%] sm:h-auto lg:h-full lg:w-1/2 flex justify-center items-center">
+      <div className="relative flex flex-col flex-wrap lg:h-screen lg:items-center p-8">
+        <div className="relative h-[90%] w-[90%] sm:h-auto lg:h-full lg:w-1/2 flex justify-center items-center">
           <img
             alt=""
             src="https://bournemouth.foodbank.org.uk/wp-content/uploads/sites/64/2023/03/Credit-card-bro-768x768.png"
-            className="h-[80%] w-[80%] md:w-[50%] object-fill"
+            className="h-[80%] w-[80%] md:w-[400px] md:h-[400px] object-fill"
           />
         </div>
 
-        <div className="text-green-700 w-[50%] px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
+        <div className="text-green-700 w-[90%] px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-lg text-center">
             <h1 className="text-2xl font-bold sm:text-3xl">
               Login to your account
