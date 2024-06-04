@@ -4,6 +4,7 @@ import { getTransactions } from "../api/Transaction";
 import TransactionCard from "../components/TransactionCard";
 import { useEffect, useState } from "react";
 import TransactionLoader from "../components/TransactionLoader";
+import Footer from "../components/Footer";
 
 const Transactions = () => {
   const [radio, setRadio] = useState("all");
@@ -253,9 +254,7 @@ const Transactions = () => {
 
         {transactionList.reverse()}
       </div>
-      <div className="bg-blue-500  w-full h-[100px] flex flex-col justify-center items-center gap-4">
-        footer
-      </div>
+      <Footer />
     </div>
   );
 };

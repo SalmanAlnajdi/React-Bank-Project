@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import { me } from "../api/auth";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deposit, withdraw } from "../api/Transaction";
+import Footer from "../components/Footer";
 
 const Home = () => {
   const [amount, setAmount] = useState(0);
@@ -109,9 +106,7 @@ const Home = () => {
           {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
         </div>
       </div>
-      <div className="bg-blue-500  w-full h-[100px] flex flex-col justify-center items-center gap-4">
-        footer
-      </div>
+      <Footer />
     </div>
   );
 };

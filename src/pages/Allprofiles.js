@@ -5,6 +5,7 @@ import { getAllUsers } from "../api/auth";
 import Transfer from "../components/Transfer";
 import MyLoader from "../components/MyLoader";
 import UserCard from "../components/UserCard";
+import Footer from "../components/Footer";
 
 const Allprofiles = () => {
   const [show, setShow] = useState(false);
@@ -49,9 +50,7 @@ const Allprofiles = () => {
         {userList}
       </div>
 
-      <div className="bg-blue-500  w-full h-[100px] flex flex-col justify-center items-center gap-4">
-        footer
-      </div>
+      <Footer />
     </div>
   );
 };

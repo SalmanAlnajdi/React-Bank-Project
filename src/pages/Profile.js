@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { me, updateProfile } from "../api/auth";
 import { useState } from "react";
 import ProfileLoader from "../components/ProfileLoader";
+import Footer from "../components/Footer";
 
 const Profile = () => {
   const [image, setImage] = useState();
@@ -79,9 +80,7 @@ const Profile = () => {
           </button>
         </div>
       </div>
-      <div className="bg-blue-500  w-full h-[100px] flex flex-col justify-center items-center gap-4">
-        footer
-      </div>
+      <Footer/>
     </div>
   );
 };
